@@ -109,6 +109,6 @@ func TestNoDNSOrIPAdresses(t *testing.T) {
 
 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
-	assert.True(t, approved)
-	assert.False(t, denied)
+	assert.True(t, denied)
+	assert.False(t, approved)
 }
