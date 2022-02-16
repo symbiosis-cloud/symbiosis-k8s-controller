@@ -1,0 +1,8 @@
+builds:
+- id: symbiosis-k8s-controller
+  dir: .  
+  main: ./cmd/symbiosis-k8s-controller/
+  ldflags:
+  - -X main.commit={{.Env.COMMIT}}
+  - -X main.ref={{.Env.REF}}
+
