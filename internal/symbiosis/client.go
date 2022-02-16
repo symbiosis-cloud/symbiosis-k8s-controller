@@ -13,9 +13,8 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://api.symbiosis.host/"
-	userAgent      = "symbiosis-client-lib/symbiosis-go-api"
-	mediaType      = "application/json"
+	userAgent = "symbiosis-client-lib/symbiosis-go-api"
+	mediaType = "application/json"
 )
 
 type Client struct {

@@ -3,7 +3,6 @@ module symbiosis-cloud/symbiosis-k8s-controller
 go 1.17
 
 require (
-	github.com/foxcpp/go-mockdns v0.0.0-20210729171921-fb145fc6f897
 	github.com/go-logr/zapr v1.2.2
 	github.com/postfinance/flash v0.2.0
 	github.com/stretchr/testify v1.7.0

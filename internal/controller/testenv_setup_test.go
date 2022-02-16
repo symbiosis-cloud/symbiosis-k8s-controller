@@ -33,8 +33,6 @@ import (
 	"symbiosis-cloud/symbiosis-k8s-controller/internal/cmd"
 	"symbiosis-cloud/symbiosis-k8s-controller/internal/controller"
 
-	mockdns "github.com/foxcpp/go-mockdns"
-
 	"github.com/thanhpk/randstr"
 	certificates_v1 "k8s.io/api/certificates/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +47,6 @@ var testEnv *envtest.Environment
 var cfg *rest.Config
 var k8sClient client.Client
 var adminClientset *clientset.Clientset
-var dnsResolver mockdns.Resolver
 var csrController *controller.CertificateSigningRequestReconciler
 
 var testContext context.Context
@@ -82,9 +79,7 @@ type CsrParams struct {
 }
 
 var (
-	testNodeName        string
-	testNodeIps         []string
-	testNodeIpAddresses []net.IP
+	testNodeName string
 )
 
 func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSigningRequest {
@@ -168,18 +163,7 @@ func packageSetup() {
 	}
 	adminClientset = clientset.NewForConfigOrDie(cfg)
 
-	testNodeIps := []string{"192.168.14.34"}
-	for _, ip := range testNodeIps {
-		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
-	}
 	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz")
-	dnsResolver = mockdns.Resolver{
-		Zones: map[string]mockdns.Zone{
-			testNodeName + ".test.ch.": {
-				A: testNodeIps,
-			},
-		},
-	}
 
 	testingConfig := cmd.Config{
 		MaxSec:    367 * 24 * 3600,
