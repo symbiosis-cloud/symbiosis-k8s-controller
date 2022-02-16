@@ -49,7 +49,6 @@ type CertificateSigningRequestReconciler struct {
 	ClusterID            string
 	Scheme               *runtime.Scheme
 	MaxExpirationSeconds int32
-	Resolver             HostResolver
 }
 
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=certificatesigningrequests,verbs=get;watch;list
@@ -111,14 +110,6 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 			"commonName", x509cr.Subject.CommonName, "specUsername", csr.Spec.Username)
 
 		appendCondition(&csr, false, reason)
-		//} else if valid, reason, err := r.DNSCheck(ctx, &csr, x509cr); !valid {
-		//	if err != nil {
-		//		l.V(0).Error(err, reason)
-		//		return res, err // returning a non-nil error to make this request be processed again in the reconcile function
-		//	}
-		//	l.V(0).Info("Denying kubelet-serving CSR. DNS checks failed. Reason:" + reason)
-
-		//	appendCondition(&csr, false, reason)
 	} else if csr.Spec.ExpirationSeconds != nil && *csr.Spec.ExpirationSeconds > r.MaxExpirationSeconds {
 		reason := "CSR spec.expirationSeconds is longer than the maximum allowed expiration second"
 		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)

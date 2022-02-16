@@ -1,2 +1,3 @@
+cmd/symbiosis-k8s-controller/symbiosis-k8s-controller
 *.swp
 *.swo

@@ -35,7 +35,7 @@ type Config struct {
 	MaxSec              int
 	K8sConfig           *rest.Config
 	BypassDNSResolution bool
-	SymbiosisApiKey     string
+	SymbiosisAPIKey     string
 	BaseURL             string
 }
 
@@ -99,7 +99,7 @@ func CreateControllerManager(config *Config) (
 	csrController = &controller.CertificateSigningRequestReconciler{
 		ClientSet:            clientset.NewForConfigOrDie(config.K8sConfig),
 		Client:               mgr.GetClient(),
-		SymbiosisClient:      *symbiosis.NewClient(http.DefaultClient, config.BaseURL, config.SymbiosisApiKey),
+		SymbiosisClient:      *symbiosis.NewClient(http.DefaultClient, config.BaseURL, config.SymbiosisAPIKey),
 		Scheme:               mgr.GetScheme(),
 		MaxExpirationSeconds: int32(config.MaxSec),
 		ClusterID:            config.ClusterID,
@@ -146,7 +146,7 @@ func prepareCmdlineConfig() *Config {
 		probeAddr:       *probeAddr,
 		ClusterID:       *clusterID,
 		MaxSec:          *maxSec,
-		SymbiosisApiKey: *apiKey,
+		SymbiosisAPIKey: *apiKey,
 		BaseURL:         *basePath,
 	}
 

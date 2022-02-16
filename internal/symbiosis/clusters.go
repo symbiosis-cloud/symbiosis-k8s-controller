@@ -7,7 +7,7 @@ import (
 )
 
 type ClusterService interface {
-	GetById(context.Context, string) (*Cluster, *http.Response, error)
+	GetByID(context.Context, string) (*Cluster, *http.Response, error)
 }
 
 type ClusterServiceOp struct {
@@ -15,18 +15,18 @@ type ClusterServiceOp struct {
 }
 
 type ClusterNode struct {
-	Id                 string `json:"id"`
+	ID                 string `json:"id"`
 	Name               string `json:"name"`
 	PrivateIpv4Address string `json:"privateIpv4Address"`
 }
 
 type Cluster struct {
-	Id    string        `json:"id"`
+	ID    string        `json:"id"`
 	Name  string        `json:"name"`
 	Nodes []ClusterNode `json:"nodes"`
 }
 
-func (svc *ClusterServiceOp) GetById(ctx context.Context, id string) (*Cluster, *http.Response, error) {
+func (svc *ClusterServiceOp) GetByID(ctx context.Context, id string) (*Cluster, *http.Response, error) {
 	path := fmt.Sprintf("/rest/v1/cluster/by-id/%v", id)
 
 	req, err := svc.client.NewRequest(ctx, http.MethodGet, path, nil)
@@ -36,6 +36,7 @@ func (svc *ClusterServiceOp) GetById(ctx context.Context, id string) (*Cluster, 
 
 	cluster := &Cluster{}
 	resp, err := svc.client.Do(ctx, req, cluster)
+
 	if err != nil {
 		return nil, resp, err
 	}

@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -27,18 +26,18 @@ type Client struct {
 	Clusters ClusterService
 }
 
-type SymbiosisApiError struct {
+type SymbiosisAPIError struct {
 	StatusCode int
 	ErrorType  string `json:"error"`
 	Message    string `json:"message"`
 	Path       string `json:"path"`
 }
 
-func (error *SymbiosisApiError) Error() string {
-	return fmt.Sprintf("Symbiosis API Error: %v (type %v, status %v)", error.Message, error.ErrorType, error.StatusCode)
+func (err *SymbiosisAPIError) Error() string {
+	return fmt.Sprintf("Symbiosis API Error: %v (type %v, status %v)", err.Message, err.ErrorType, err.StatusCode)
 }
 
-func NewClient(httpClient *http.Client, baseURL string, apiKey string) *Client {
+func NewClient(httpClient *http.Client, baseURL, apiKey string) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
@@ -52,7 +51,7 @@ func NewClient(httpClient *http.Client, baseURL string, apiKey string) *Client {
 	return c
 }
 
-func (c *Client) NewRequest(ctx context.Context, method string, path string, body interface{}) (*http.Request, error) {
+func (c *Client) NewRequest(ctx context.Context, method, path string, body interface{}) (*http.Request, error) {
 	u, err := c.BaseURL.Parse(path)
 	if err != nil {
 		return nil, err
@@ -74,6 +73,7 @@ func (c *Client) NewRequest(ctx context.Context, method string, path string, bod
 	req.Header.Add("Content-Type", mediaType)
 	req.Header.Add("Accept", mediaType)
 	req.Header.Add("X-Auth-ApiKey", c.apiKey)
+
 	return req, nil
 }
 
@@ -85,10 +85,11 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	defer resp.Body.Close()
 
 	if c := resp.StatusCode; c < 200 || c > 299 {
-		data, err := ioutil.ReadAll(resp.Body)
-		errorResponse := &SymbiosisApiError{
+		data, err := io.ReadAll(resp.Body)
+		errorResponse := &SymbiosisAPIError{
 			StatusCode: resp.StatusCode,
 		}
+
 		if err == nil && len(data) > 0 {
 			err := json.Unmarshal(data, errorResponse)
 			if err != nil {

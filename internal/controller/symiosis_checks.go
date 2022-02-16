@@ -14,7 +14,7 @@ import (
 
 // ProviderChecks is a function in which the Cloud Provider specifies a series of checks
 // to run against the CSRs. The out-of-band identity checks of the CSRs should happen here
-func (r *CertificateSigningRequestReconciler) ProviderChecks(ctx context.Context, csr *certificatesv1.CertificateSigningRequest, x509csr *x509.CertificateRequest) (bool, string) {
+func (r *CertificateSigningRequestReconciler) ProviderChecks(ctx context.Context, csr *certificatesv1.CertificateSigningRequest, x509csr *x509.CertificateRequest) (success bool, err string) {
 	if len(x509csr.DNSNames) > 1 {
 		return false, "The x509 Cert Request contains more than 1 DNS name"
 	}
@@ -27,12 +27,13 @@ func (r *CertificateSigningRequestReconciler) ProviderChecks(ctx context.Context
 		return false, fmt.Sprintf("The SAN DNS Name %s in the x509 CSR is not prefixed by the node name %s (hostname)", sanDNSName, hostname)
 	}
 
-	cluster, _, _ := r.SymbiosisClient.Clusters.GetById(ctx, r.ClusterID)
+	cluster, _, _ := r.SymbiosisClient.Clusters.GetByID(ctx, r.ClusterID)
 
 	var node *symbiosis.ClusterNode
-	for _, n := range cluster.Nodes {
+
+	for i, n := range cluster.Nodes {
 		if n.Name == hostname {
-			node = &n
+			node = &cluster.Nodes[i]
 			break
 		}
 	}
@@ -43,10 +44,11 @@ func (r *CertificateSigningRequestReconciler) ProviderChecks(ctx context.Context
 
 	sanIPAddrs := x509csr.IPAddresses
 	for _, ip := range sanIPAddrs {
-		nodeIp := net.ParseIP(node.PrivateIpv4Address)
-		if !nodeIp.Equal(ip) {
+		nodeIP := net.ParseIP(node.PrivateIpv4Address)
+		if !nodeIP.Equal(ip) {
 			return false, "SAN IP is not equal to private node IP"
 		}
 	}
+
 	return true, ""
 }
