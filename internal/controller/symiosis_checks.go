@@ -19,6 +19,10 @@ func (r *CertificateSigningRequestReconciler) ProviderChecks(ctx context.Context
 		return false, "The x509 Cert Request contains more than 1 DNS name"
 	}
 
+	if len(x509csr.DNSNames) == 0 {
+		return true, ""
+	}
+
 	sanDNSName := x509csr.DNSNames[0]
 
 	hostname := strings.TrimPrefix(csr.Spec.Username, "system:node:")
