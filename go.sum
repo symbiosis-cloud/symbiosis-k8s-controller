@@ -473,8 +473,6 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndrE9hABlRI=
 github.com/postfinance/flash v0.2.0 h1:/r0ZGqbg+vEaAy7iRygHlGIzukexcC+1Ch/QZ7GjLVE=
 github.com/postfinance/flash v0.2.0/go.mod h1:XpRoWKDcSRWrIooOVXmavT3u5Y5zVhxecJPyVgN3e9Q=
-github.com/postfinance/kubelet-csr-approver v0.1.2 h1:iQ5gK6zaaweNw1RJP/y5VrBaYI7t6zcubZYIkD+3Cz0=
-github.com/postfinance/kubelet-csr-approver v0.1.2/go.mod h1:r8HBdWabbkOz/bo+Fu3f4EhbaNvwGiDSjX8YLPbnBH0=
 github.com/pquerna/cachecontrol v0.0.0-20171018203845-0dec1b30a021/go.mod h1:prYjPmNq4d1NPVmpShWobRqXY3q7Vp+80DqgxxUrUIA=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
 github.com/prometheus/client_golang v0.9.3-0.20190127221311-3c4408c8b829/go.mod h1:p2iRAGwDERtqlqzRXnrOVns+ignqQo//hLXqYxZYVNs=

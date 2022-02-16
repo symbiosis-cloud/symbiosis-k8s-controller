@@ -27,7 +27,8 @@ import (
 
 func TestValidCsrApproved(t *testing.T) {
 	csrParams := CsrParams{
-		nodeName: testNodeName,
+		nodeName:    testNodeName,
+		ipAddresses: testNodeIpAddresses,
 	}
 	validCsr := createCsr(t, csrParams)
 
@@ -43,8 +44,9 @@ func TestValidCsrApproved(t *testing.T) {
 
 func TestWrongSignerCsr(t *testing.T) {
 	csrParams := CsrParams{
-		csrName:  "csr-wrong-signer",
-		nodeName: testNodeName,
+		csrName:     "csr-wrong-signer",
+		ipAddresses: testNodeIpAddresses,
+		nodeName:    testNodeName,
 	}
 	csr := createCsr(t, csrParams)
 	csr.Spec.SignerName = "example.com/not-kubelet-serving"
@@ -61,9 +63,10 @@ func TestWrongSignerCsr(t *testing.T) {
 
 func TestNonMatchingCommonNameUsername(t *testing.T) {
 	csrParams := CsrParams{
-		csrName:    "csr-non-matching",
-		commonName: "funny-common-name",
-		nodeName:   testNodeName,
+		csrName:     "csr-non-matching",
+		commonName:  "funny-common-name",
+		ipAddresses: testNodeIpAddresses,
+		nodeName:    testNodeName,
 	}
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})

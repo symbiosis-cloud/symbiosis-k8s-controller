@@ -79,7 +79,9 @@ type CsrParams struct {
 }
 
 var (
-	testNodeName string
+	testNodeName        string
+	testNodeIps         []string
+	testNodeIpAddresses []net.IP
 )
 
 func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSigningRequest {
@@ -162,6 +164,11 @@ func packageSetup() {
 		log.Fatalf("Could not create a k8sClient, exiting. Error output:\n %v", err)
 	}
 	adminClientset = clientset.NewForConfigOrDie(cfg)
+
+	testNodeIps := []string{"192.168.14.34"}
+	for _, ip := range testNodeIps {
+		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
+	}
 
 	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz")
 
